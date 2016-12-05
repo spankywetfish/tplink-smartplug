@@ -23,9 +23,9 @@ A full list of commands is provided in [tplink-smarthome-commands.txt](tplink-sm
 
 #### Usage ####
 
-   `./tplink-smarthome.py -t <ip> [-c <cmd> || -j <json>]`
+   `./tplink-smarthome.py [-h] (-t <ip> | -n <hostname>) <ip> [-c <cmd> || -j <json>]`
 
-Provide the target IP using `-t` and a command to send using either `-c` or `-j`. Commands for the `-c` flag:
+Provide the target IP or hostname using `-t` or `-n` and a command to send using either `-c` or `-j`. Commands for the `-c` flag:
 
 | Command   | Description                          |
 |-----------|--------------------------------------|
@@ -35,6 +35,7 @@ Provide the target IP using `-t` and a command to send using either `-c` or `-j`
 | cloudinfo | Returns cloud connectivity info      |
 | wlanscan  | Scan for nearby access points        |
 | time      | Returns the system time              |
+| synctime  | Syncs time with local host           |
 | schedule  | Lists configured schedule rules      |
 | countdown | Lists configured countdown rules     |
 | antitheft | Lists configured antitheft rules     |
