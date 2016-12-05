@@ -21,6 +21,7 @@
 #
 import socket
 import argparse
+import time
 
 version = 0.1
 
@@ -34,12 +35,14 @@ def validIP(ip):
 
 # Predefined Smart Plug Commands
 # For a full list of commands, consult tplink_commands.txt
+#### spankywetfish : Added 'synctime' command to sync time with local system (location index 39=UK) ####
 commands = {'info'     : '{"system":{"get_sysinfo":{}}}',
 			'on'       : '{"system":{"set_relay_state":{"state":1}}}',
 			'off'      : '{"system":{"set_relay_state":{"state":0}}}',
 			'cloudinfo': '{"cnCloud":{"get_info":{}}}',
 			'wlanscan' : '{"netif":{"get_scaninfo":{"refresh":0}}}',
 			'time'     : '{"time":{"get_time":{}}}',
+			'synctime' : time.strftime('{"time":{"set_timezone":{"year":%Y,"month":%m,"mday":%d,"wday":%w,"hour":%H,"min":%M,"sec":%S,"index":39}}}'),
 			'schedule' : '{"schedule":{"get_rules":{}}}',
 			'countdown': '{"count_down":{"get_rules":{}}}',
 			'antitheft': '{"anti_theft":{"get_rules":{}}}',
@@ -68,10 +71,13 @@ def decrypt(string):
 	return result
 
 # Parse commandline arguments
+#### spankywetfish : Added -n switch to allow hostname use instead of IP address ####
 parser = argparse.ArgumentParser(description="TP-Link Wi-Fi Smart Plug Client v" + str(version))
-parser.add_argument("-t", "--target", metavar="<ip>", required=True, help="Target IP Address", type=validIP)
+hostgoup = parser.add_mutually_exclusive_group(required=True)
+hostgoup.add_argument("-t", "--target", metavar="<ip>", help="Target IP Address", type=validIP)
+hostgoup.add_argument("-n", "--name", metavar="<hostname>", help="Target Hostname")
 group = parser.add_mutually_exclusive_group(required=True)
-group.add_argument("-c", "--command", metavar="<command>", help="Preset command to send. Choices are: "+", ".join(commands), choices=commands) 
+group.add_argument("-c", "--command", metavar="<command>", help="Preset command to send. Choices are: "+", ".join(commands), choices=commands)
 group.add_argument("-j", "--json", metavar="<JSON string>", help="Full JSON string of command to send")
 args = parser.parse_args()
 
